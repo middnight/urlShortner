@@ -9,4 +9,6 @@ public interface URLShorteningService {
   URLRecord find(String shortUrl);
 
   URLRecord delete(String shortUrl);
+
+  void deleteExpired();
 }

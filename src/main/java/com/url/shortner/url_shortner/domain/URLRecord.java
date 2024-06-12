@@ -1,5 +1,6 @@
 package com.url.shortner.url_shortner.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,10 +14,14 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Data
 @Document(indexName = "urls")
 public class URLRecord {
-  @Id
   @Field(type = FieldType.Text)
   private String url;
 
+  @Id
   @Field(type = FieldType.Text)
   private String shortUrl;
+
+  @JsonIgnore
+  @Field(type = FieldType.Long)
+  private Long createdOn;
 }
