@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
-@RequestMapping("/url")
+@RequestMapping("/api/url")
 @RequiredArgsConstructor
 public class URLShortnerController {
   private final URLShorteningService urlShorteningService;

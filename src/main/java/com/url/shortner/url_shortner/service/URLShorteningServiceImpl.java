@@ -42,8 +42,8 @@ public class URLShorteningServiceImpl implements URLShorteningService {
   @Override
   public URLRecord find(String shortUrl) {
     Page<URLRecord> urlRecordPage = urlRepository.findByShortUrl(shortUrl, Pageable.ofSize(1));
-    if(urlRecordPage.getContent().isEmpty()){
-      throw new RuntimeException("No mapping url found for given short url : "+shortUrl);
+    if (urlRecordPage.getContent().isEmpty()) {
+      throw new RuntimeException("No mapping url found for given short url : " + shortUrl);
     }
     return urlRecordPage.getContent().get(0);
   }
