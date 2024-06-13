@@ -2,8 +2,10 @@ package com.url.shortner.url_shortner.service;
 
 import com.url.shortner.url_shortner.dal.URLRepository;
 import com.url.shortner.url_shortner.domain.URLRecord;
+import com.url.shortner.url_shortner.service.cache.LRUCache;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,7 @@ public class URLShorteningServiceImpl implements URLShorteningService {
 
   private final String SEPARATOR = "/";
   private final URLRepository urlRepository;
+  private final LRUCache<String, URLRecord> lruCache = new LRUCache<>(2000);
 
   @Override
   public URLRecord create(String url) {
@@ -41,11 +44,20 @@ public class URLShorteningServiceImpl implements URLShorteningService {
 
   @Override
   public URLRecord find(String shortUrl) {
+    // first check in cache else goto db find the value and put in cache and return
+
+    Optional<URLRecord> optionalURLRecord = lruCache.get(shortUrl);
+    if (optionalURLRecord.isPresent()) {
+      return optionalURLRecord.get();
+    }
+
     Page<URLRecord> urlRecordPage = urlRepository.findByShortUrl(shortUrl, Pageable.ofSize(1));
     if (urlRecordPage.getContent().isEmpty()) {
       throw new RuntimeException("No mapping url found for given short url : " + shortUrl);
     }
-    return urlRecordPage.getContent().get(0);
+    URLRecord urlRecord = urlRecordPage.getContent().get(0);
+    lruCache.put(shortUrl, urlRecord);
+    return urlRecord;
   }
 
   @Override
@@ -53,6 +65,7 @@ public class URLShorteningServiceImpl implements URLShorteningService {
 
     URLRecord url = find(shortUrl);
     urlRepository.delete(url);
+    lruCache.invalidate(shortUrl);
     return url;
   }
 
@@ -62,5 +75,6 @@ public class URLShorteningServiceImpl implements URLShorteningService {
     LocalDateTime counter = LocalDateTime.now().minusMonths(1);
     long mills = counter.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     urlRepository.deleteAllByCreatedOnGreaterThan(mills);
+    lruCache.clear();
   }
 }
