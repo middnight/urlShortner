@@ -115,6 +115,22 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.4.3</version>
+				<configuration>
+					<to>
+						<image>docker.io/shivamgiri1996/dev-images</image>
+						<tags>url-shortner-v0.1</tags>
+					</to>
+					<container>
+						<mainClass>com.url.shortner.url_shortner.UrlShortnerApplication</mainClass>
+						<ports>9001</ports>
+						<ports>9200</ports>
+					</container>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
