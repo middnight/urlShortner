@@ -8,5 +8,5 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 public interface URLRepository extends ElasticsearchRepository<URLRecord, String> {
   Page<URLRecord> findByShortUrl(String shortUrl, Pageable pageable);
 
-  void deleteAllByCreatedOnGreaterThan(long time);
+  void deleteAllByCreatedOnLessThan(long time);
 }

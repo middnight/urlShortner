@@ -2,10 +2,8 @@ package com.url.shortner.url_shortner.controller;
 
 import com.url.shortner.url_shortner.domain.URLRecord;
 import com.url.shortner.url_shortner.service.URLShorteningService;
-import java.net.URI;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,13 +26,6 @@ public class URLShortnerController {
   @GetMapping
   ResponseEntity<URLRecord> find(@RequestParam @Nonnull String url) {
     return ResponseEntity.ok(urlShorteningService.find(url));
-  }
-
-  @GetMapping("/redirect")
-  ResponseEntity<Void> redirect(@RequestParam("url") @Nonnull String url) {
-    URLRecord urlRecord = urlShorteningService.find(url);
-
-    return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(urlRecord.getUrl())).build();
   }
 
   @DeleteMapping

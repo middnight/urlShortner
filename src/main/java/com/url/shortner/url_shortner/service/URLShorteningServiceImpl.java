@@ -74,7 +74,7 @@ public class URLShorteningServiceImpl implements URLShorteningService {
   public void deleteExpired() {
     LocalDateTime counter = LocalDateTime.now().minusMonths(1);
     long mills = counter.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-    urlRepository.deleteAllByCreatedOnGreaterThan(mills);
+    urlRepository.deleteAllByCreatedOnLessThan(mills);
     lruCache.clear();
   }
 }
