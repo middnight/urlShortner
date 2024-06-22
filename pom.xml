@@ -133,9 +133,9 @@
 						</jvmFlags>
 						<mainClass>com.url.shortner.url_shortner.UrlShortnerApplication</mainClass>
 						<ports>
-							<port>9200</port>
+<!--							<port>9200</port>-->
 							<port>9001</port>
-						</ports>>
+						</ports>
 					</container>
 				</configuration>
 			</plugin>
