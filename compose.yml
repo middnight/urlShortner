@@ -1,0 +1,43 @@
+name: url-shortner-app
+
+services:
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.0
+    container_name: elastic_db
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - 9200:9200
+    volumes:
+      - elastic:/usr/share/elasticsearch/data
+    restart: always
+    networks:
+      - backend
+  backend:
+    image: docker.io/shivamgiri1996/dev-images:latest
+    container_name: url_shortner_backend
+    depends_on:
+      - elastic
+    environment:
+      - temp
+      - temp1
+      - temp2
+      - temp3
+    ports:
+      - 9001:8080
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  elastic:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: D:\Development\elastic-volume
