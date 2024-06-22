@@ -45,7 +45,6 @@ public class URLShorteningServiceImpl implements URLShorteningService {
   @Override
   public URLRecord find(String shortUrl) {
     // first check in cache else goto db find the value and put in cache and return
-
     Optional<URLRecord> optionalURLRecord = lruCache.get(shortUrl);
     if (optionalURLRecord.isPresent()) {
       return optionalURLRecord.get();

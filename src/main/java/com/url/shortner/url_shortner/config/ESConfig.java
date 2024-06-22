@@ -1,13 +1,11 @@
 package com.url.shortner.url_shortner.config;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@RequiredArgsConstructor
-@Getter
+@Data
 public class ESConfig {
 
   @Value("${es.db.host}")

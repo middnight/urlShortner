@@ -15,6 +15,7 @@ public class ElasticDbConnectionConfig extends ElasticsearchConfiguration {
 
   @Override
   public ClientConfiguration clientConfiguration() {
+    System.out.println("config is " + esConfig.toString());
     return ClientConfiguration.builder()
         .connectedTo(esConfig.getElasticDbHost() + ":" + esConfig.getElasticDbPort())
         .build();

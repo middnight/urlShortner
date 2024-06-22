@@ -18,15 +18,14 @@ services:
   backend:
     image: docker.io/shivamgiri1996/dev-images:latest
     container_name: url_shortner_backend
+    restart: always
     depends_on:
       - elastic
     environment:
-      - temp
-      - temp1
-      - temp2
-      - temp3
+      - es.db.host=elastic_db
+      - url.prefix=sh.tech
     ports:
-      - 9001:8080
+      - 8080:9001
     networks:
       - backend
 
