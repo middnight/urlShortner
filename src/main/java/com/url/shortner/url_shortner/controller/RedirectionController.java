@@ -21,7 +21,7 @@ public class RedirectionController {
   @GetMapping("**")
   ResponseEntity<Void> redirect(HttpServletRequest request) {
     String requestUrl = request.getRequestURI();
-     String url = StringUtils.removeFirst(requestUrl, "/");
+    String url = StringUtils.removeFirst(requestUrl, "/");
     URLRecord urlRecord = urlShorteningService.find(url);
 
     return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(urlRecord.getUrl())).build();
