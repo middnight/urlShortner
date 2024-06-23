@@ -23,7 +23,7 @@ services:
       - elastic
     environment:
       - es.db.host=elastic_db
-      - url.prefix=sh.tech
+      - url.prefix=url-bot.tech
     ports:
       - 8080:9001
     networks:

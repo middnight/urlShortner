@@ -24,12 +24,12 @@ public class URLShortnerController {
   }
 
   @GetMapping
-  ResponseEntity<URLRecord> find(@RequestParam @Nonnull String url) {
-    return ResponseEntity.ok(urlShorteningService.find(url));
+  ResponseEntity<URLRecord> find(@RequestParam @Nonnull String shortUrl) {
+    return ResponseEntity.ok(urlShorteningService.find(shortUrl));
   }
 
   @DeleteMapping
-  ResponseEntity<URLRecord> delete(@RequestParam @Nonnull String url) {
-    return ResponseEntity.ok(urlShorteningService.delete(url));
+  ResponseEntity<URLRecord> delete(@RequestParam @Nonnull String shortUrl) {
+    return ResponseEntity.ok(urlShorteningService.delete(shortUrl));
   }
 }

@@ -2,6 +2,7 @@ package com.url.shortner.url_shortner.service;
 
 import com.url.shortner.url_shortner.dal.URLRepository;
 import com.url.shortner.url_shortner.domain.URLRecord;
+import com.url.shortner.url_shortner.exception.UrlServiceException;
 import com.url.shortner.url_shortner.service.cache.LRUCache;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -24,7 +25,7 @@ public class URLShorteningServiceImpl implements URLShorteningService {
 
   private final ShortUrlGeneratorStrategyProvider shortUrlGeneratorStrategyProvider;
 
-  private final String SEPARATOR = "/";
+  private static final String SEPARATOR = "/";
   private final URLRepository urlRepository;
   private final LRUCache<String, URLRecord> lruCache = new LRUCache<>(2000);
 
@@ -35,10 +36,13 @@ public class URLShorteningServiceImpl implements URLShorteningService {
     URLRecord record =
         URLRecord.builder()
             .url(url)
-            .shortUrl(prefixUrl + SEPARATOR + shortUrl)
+            .shortUrl(shortUrl)
             .createdOn(System.currentTimeMillis())
+            .lastUpdateOn(System.currentTimeMillis())
             .build();
     urlRepository.save(record);
+    // before returning add the host details in short url
+    record.setShortUrl(prefixUrl + SEPARATOR + record.getShortUrl());
     return record;
   }
 
@@ -52,10 +56,14 @@ public class URLShorteningServiceImpl implements URLShorteningService {
 
     Page<URLRecord> urlRecordPage = urlRepository.findByShortUrl(shortUrl, Pageable.ofSize(1));
     if (urlRecordPage.getContent().isEmpty()) {
-      throw new RuntimeException("No mapping url found for given short url : " + shortUrl);
+      throw new UrlServiceException("No mapping url found for given short url : " + shortUrl);
     }
     URLRecord urlRecord = urlRecordPage.getContent().get(0);
     lruCache.put(shortUrl, urlRecord);
+    // whenever putting value in cache update lastupdatedOn in record, I know not perfect but, it'll
+    // do the job for now
+    urlRecord.setLastUpdateOn(System.currentTimeMillis());
+    urlRepository.save(urlRecord);
     return urlRecord;
   }
 
@@ -71,9 +79,9 @@ public class URLShorteningServiceImpl implements URLShorteningService {
   @Scheduled(fixedDelay = 24 * 60 * 60 * 1000)
   @Override
   public void deleteExpired() {
-    LocalDateTime counter = LocalDateTime.now().minusMonths(1);
+    LocalDateTime counter = LocalDateTime.now().minusMonths(2);
     long mills = counter.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-    urlRepository.deleteAllByCreatedOnLessThan(mills);
+    urlRepository.deleteAllByLastUpdateOnLessThan(mills);
     lruCache.clear();
   }
 }
