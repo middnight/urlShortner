@@ -25,12 +25,27 @@ services:
       - es.db.host=elastic_db
       - url.prefix=url-bot.tech
     ports:
-      - 8080:9001
+      - 80:9001
     networks:
       - backend
+      - ui
+  ui:
+    image: docker.io/priyanshmishra/url-shortner:latest
+    container_name: url_shortner_ui
+    restart: always
+    depends_on:
+      - backend
+    environment:
+      - API_URL=http://localhost:80
+    ports:
+      - 8080:80
+    networks:
+      - ui
 
 networks:
   backend:
+    driver: bridge
+  ui:
     driver: bridge
 
 volumes:
