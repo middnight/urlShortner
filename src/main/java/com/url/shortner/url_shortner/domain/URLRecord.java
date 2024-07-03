@@ -14,7 +14,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Document(indexName = "urls")
 public class URLRecord {
   @Field(type = FieldType.Text)
-  private String url;
+  private String longUrl;
   /*
    * I'm not adding the prefix url of domain into database record, it gives me the flexibility to move entire data set to new domain
    * without doing any data migration

@@ -35,7 +35,7 @@ public class URLShorteningServiceImpl implements URLShorteningService {
         shortUrlGeneratorStrategyProvider.getByStrategy(urlGenerationStrategy).generate(url);
     URLRecord record =
         URLRecord.builder()
-            .url(url)
+            .longUrl(url)
             .shortUrl(shortUrl)
             .createdOn(System.currentTimeMillis())
             .lastUpdateOn(System.currentTimeMillis())

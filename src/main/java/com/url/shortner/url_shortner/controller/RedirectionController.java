@@ -24,6 +24,8 @@ public class RedirectionController {
     String url = StringUtils.removeFirst(requestUrl, "/");
     URLRecord urlRecord = urlShorteningService.find(url);
 
-    return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(urlRecord.getUrl())).build();
+    return ResponseEntity.status(HttpStatus.FOUND)
+        .location(URI.create(urlRecord.getLongUrl()))
+        .build();
   }
 }
